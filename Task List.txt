@@ -1,0 +1,7 @@
+- GIT setup
+- Wireframe
+- Data analysis and sourcing
+- Basic react app
+  - show rich-list wealth
+  - real-time interest
+  
