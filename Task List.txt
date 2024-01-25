@@ -1,6 +1,10 @@
 - GIT setup
 - Wireframe
 - Data analysis and sourcing
+- React app demo
+	- install node.js
+	- install react
+	- create react app
 - Basic react app
   - show rich-list wealth
   - real-time interest
