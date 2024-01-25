@@ -2,30 +2,31 @@
 
 import React from "react";
 import axios from "axios";
+
 import { useEffect } from 'react'
 import { useState } from 'react'
 
 const Home = () => {
     // Load our static from the server side and populate the variables
-    const [interestRates, setInterestRateData] = useState([])
-    const [wealthData, setWealthData] = useState([])
-    const [povertyData, setPovertyData] = useState([])
-    const [comparisonData, setComparisonData] = useState([])
+    const [wealthColumns, setWealthColumns] = useState([])
+    const [wealthRecords, setWealthRecords] = useState([])
+    const [povertyColumns, setPovertyColumns] = useState([])
+    const [povertyRecords, setPovertyRecords] = useState([])
 
     useEffect(()=>{
         const getData = async () =>{
             try{
-                var res = await axios.get("http://localhost:8800/interest_rates")
-                setInterestRateData(res.data[0].JSON)
+                // Load Wealth Data
+                var res = await axios.get("http://localhost:8800/wealth_data")
+                var jsonObject = JSON.parse(res.data[0].JSON);
+                setWealthColumns(Object.keys(jsonObject.Wealth[0]))
+                setWealthRecords(jsonObject.Wealth)
 
-                res = await axios.get("http://localhost:8800/wealth_data")
-                setWealthData(res.data[0].JSON)
-
+                // Load Poverty Data
                 res = await axios.get("http://localhost:8800/poverty_data")
-                setPovertyData(res.data[0].JSON) 
-
-                res = await axios.get("http://localhost:8800/comparison_data")
-                setComparisonData(res.data[0].JSON)                    
+                jsonObject = JSON.parse(res.data[0].JSON);
+                setPovertyColumns(Object.keys(jsonObject.Poverty))
+                setPovertyRecords(jsonObject.Poverty)
             }
             catch(err){
                 console.log(err)
@@ -36,23 +37,108 @@ const Home = () => {
 
     return (
         <div>
-            <h1>Home page</h1>
-            <div className="interestRates">
-            <h2>Sending interest rate data request ...</h2>
-                <h3>{interestRates}</h3>
+            <h1>UK Wealth Inequality</h1>
+            <div className="wealthDiv">
+                <h2>The top 20 richest families</h2>
+                <table className="wealthTable">
+                    <thead>
+                        <tr>
+                            <th key={0}>{wealthColumns[1]}</th>
+                            <th key={1}>{wealthColumns[0]}</th>
+                            <th key={2}>{wealthColumns[3]}</th>
+                            <th key={3}>{wealthColumns[2]} £BN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            wealthRecords.map((wealthRecord, i) =>(
+                                <tr key={i}>
+                                    <td>{wealthRecord.Rank}</td>
+                                    <td>{wealthRecord.Name}</td>
+                                    <td>{wealthRecord.Industry}</td>
+                                    <td>{wealthRecord.Wealth}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div  className="sliderDiv">
+            <h2>Redistribution</h2>
+                <table className="sliderTable">
+                    <thead>
+                        <tr>
+                            <th key={0}>
+                                <a href="https://www.webcodzing.com/" target="_blank"> 
+                                    <button>5%</button> 
+                                </a>
+                            </th>
+                            <th key={1}>
+                                <a href="https://www.webcodzing.com/" target="_blank"> 
+                                    <button>10%</button> 
+                                </a>
+                            </th>
+                            <th key={2}>
+                                <a href="https://www.webcodzing.com/" target="_blank"> 
+                                    <button>15%</button> 
+                                </a>
+                            </th>
+                            <th key={3}>
+                                <a href="https://www.webcodzing.com/" target="_blank"> 
+                                    <button>25%</button> 
+                                </a>
+                            </th>
+                            <th key={4}>
+                                <a href="https://www.webcodzing.com/" target="_blank"> 
+                                    <button>50%</button> 
+                                </a>
+                            </th>                                                                                    
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td>                                
+                                    2.9048
+                                </td>
+                                <td>                                
+                                </td>
+                                <td>                                
+                                </td>
+                                <td>                                
+                                </td>
+                                <td>                                
+                                    126578
+                                </td>                                                                                                
+                            </tr>
+                    </tbody>
+                </table>
+
             </div>            
-            <div className="wealthData">
-            <h2>Sending wealth data request ...</h2>
-                <h3>{wealthData}</h3>
+            <div  className="povertyDiv">
+                <h2>People living in poverty</h2>
+                <table className="povertyTable">
+                    <thead>
+                        <tr>
+                            <th key={0}>Category</th>
+                            <th key={1}>Count #</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td>{povertyRecords.Children}</td>
+                                <td>Children</td>
+                            </tr>
+                            <tr>
+                                <td>{povertyRecords.Adults}</td>
+                                <td>Adults</td>
+                            </tr>
+                            <tr>
+                                <td>{povertyRecords.Pensioners}</td>
+                                <td>Pensioners</td>
+                            </tr>                            
+                    </tbody>
+                </table>
             </div>
-            <div className="povertyData">
-            <h2>Sending poverty data request ...</h2>
-                <h3>{povertyData}</h3>
-            </div>
-            <div className="comparisonData">
-            <h2>Sending comparison data request ...</h2>
-                <h3>{comparisonData}</h3>
-            </div>                        
         </div>
     )
 }

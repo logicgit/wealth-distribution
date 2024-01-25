@@ -11,3 +11,183 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h1 
+{ 
+  text-align: center 
+}
+
+h2
+{ 
+  text-align: center 
+}
+
+.wealthDiv
+{
+    float: left;
+    width: 40%;
+    height: 720px;
+}
+
+.sliderDiv
+{
+    float: left;
+    width: 20%;
+    height: 280px;
+}
+
+.povertyDiv
+{
+    float: right;
+    width: 40%;
+    height: 280px;
+}
+
+.wealthTable
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 300px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.wealthTable thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.wealthTable th
+{
+  height: 35px;
+  padding: 12px 15px;
+}
+
+.wealthTable td {
+    padding: 12px 15px;
+    font-size: 0.9em;
+}
+
+.wealthTable tbody tr {
+  border-bottom: thin solid #dddddd;
+}
+
+.wealthTable tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.wealthTable tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.wealthTable tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.povertyTable
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.povertyTable thead tr {
+  background-color: #e7893c;;
+  color: #ffffff;
+  text-align: left;
+}
+
+.povertyTable th
+{
+  height: 35px;
+  width: 425px;
+  padding: 12px 15px;
+}
+
+.povertyTable td {
+    width: 425px;
+    padding: 12px 15px;
+}
+
+.povertyTable tbody tr {
+  border-bottom: thin solid #dddddd;
+  width: 2000;
+}
+
+.povertyTable tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.povertyTable tbody tr:last-of-type {
+  border-bottom: 2px solid #e7893c;
+}
+
+.povertyTable tbody tr.active-row {
+  font-weight: bold;
+  color: #e7893c;
+}
+
+.sliderTable
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.sliderTable thead tr {
+  background-color: #ba47f0;;
+  color: #ffffff;
+  text-align: left;
+}
+
+.sliderTable th
+{
+  height: 35px;
+  width: 425px;
+  padding: 12px 15px;
+}
+
+.sliderTable td {
+    width: 425px;
+    padding: 12px 15px;
+}
+
+.sliderTable tbody tr {
+  border-bottom: thin solid #dddddd;
+  width: 2000;
+}
+
+.sliderTable tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.sliderTable tbody tr:last-of-type {
+  border-bottom: 2px solid #ba47f0;
+}
+
+.sliderTable tbody tr.active-row {
+  font-weight: bold;
+  color: #ba47f0;
+}
+
+button, input{
+    border: 2px solid rgb(231, 15, 195);
+    background-color: rgb(250, 250, 250);
+    color: rgb(97, 7, 97);
+    font-size: 16px;
+    
+    cursor: pointer;
+    border-radius: 5px
+}
+
+button:hover {
+  background-color: rgb(216, 22, 190);
+  color: white;
+}
