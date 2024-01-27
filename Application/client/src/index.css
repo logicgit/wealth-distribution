@@ -94,6 +94,11 @@ h2
 
 .wealthTable tbody tr {
   border-bottom: thin solid #dddddd;
+  height: 100px;  
+}
+
+.wealthTable tbody tr:nth-child(1){
+  font-weight: bold;
 }
 
 .wealthTable tbody tr:nth-of-type(even) {
@@ -139,6 +144,11 @@ h2
 .povertyTable tbody tr {
   border-bottom: thin solid #dddddd;
   width: 2000;
+  height: 100px;  
+}
+
+.povertyTable tbody tr:nth-child(1){
+  font-weight: bold;
 }
 
 .povertyTable tbody tr:nth-of-type(even) {
@@ -181,9 +191,26 @@ h2
     padding: 12px 15px;
 }
 
+.sliderTable td:nth-child(1){
+  color: red;
+}
+
+.sliderTable td:nth-child(3){
+  color: green;
+}
+
+.sliderTable td:nth-child(2){
+  text-align: center;
+}
+
 .sliderTable tbody tr {
   border-bottom: thin solid #dddddd;
   width: 2000;
+  height: 100px;  
+}
+
+.sliderTable tbody tr:nth-child(1){
+  font-weight: bold;
 }
 
 .sliderTable tbody tr:nth-of-type(even) {

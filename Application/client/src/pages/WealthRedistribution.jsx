@@ -6,8 +6,14 @@ import axios from "axios";
 import { useEffect } from 'react'
 import { useState } from 'react'
 
+import Slider from "rc-slider";
+import 'rc-slider/assets/index.css';
+import { adjustValue } from "../engine/engine";
+import { reduceValue } from "../engine/engine";
+import { reducedPovertyNumber } from "../engine/engine";
+
+// Load our static from the server side and populate the variables
 const WealthRedistribution = () => {
-    // Load our static from the server side and populate the variables
     const [wealthColumns, setWealthColumns] = useState([])
     const [wealthRecords, setWealthRecords] = useState([])
     const [povertyColumns, setPovertyColumns] = useState([])
@@ -34,6 +40,49 @@ const WealthRedistribution = () => {
         }
         getData()
     },[])
+
+    // Slider has changed
+    // Write the % to the table
+    // Call the CalcEngine to get updated wealth data
+    // Call the CalcEngine to get updated poverty data
+    const sliderChanged = (value) => {
+        // Get our cell and set the %
+        var sliderTable = document.getElementsByClassName("sliderTable")[0];
+        let percentCells = sliderTable.rows[1].cells;
+        percentCells[1].innerHTML = value + "%";
+
+        // Loop around the wealth columns, call adjustValue to reduce by the percentage
+        // and set the corresponding value in our redistribution table
+        var wealthTable = document.getElementsByClassName("wealthTable")[0];
+        var wealthToShare = 0
+        for (var i = 1, row; row = wealthTable.rows[i]; i++) {
+            let wealthCells = row.cells;
+            let wealthValue = wealthCells[3].innerHTML
+            sliderTable.rows[i].cells[0].innerHTML = reduceValue(wealthValue, value);
+
+            // Store the total wealth shared for later
+            if (i == 1) {
+                wealthToShare = wealthValue;
+            }
+        }
+
+        // Loop around the poverty columns, call adjustValue to reduce by the percentage
+        // and set the corresponding value in our redistribution table
+          var povertyTable = document.getElementsByClassName("povertyTable")[0];
+          var totalPovertyCount = 0;
+          for (var i = 1, row; row = povertyTable.rows[i]; i++) {
+            let povertyCells = row.cells;
+            let povertyCount = povertyCells[0].innerHTML;
+
+            // Store the total poverty count for later
+            if (i == 1) {
+                totalPovertyCount = povertyCount
+            } 
+
+            let adjustedPovertyCount = povertyCount - reducedPovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
+            sliderTable.rows[i].cells[2].innerHTML = adjustedPovertyCount;       
+        }     
+    };
 
     return (
         <div>
@@ -64,52 +113,46 @@ const WealthRedistribution = () => {
                 </table>
             </div>
             <div  className="sliderDiv">
-            <h2>Redistribution</h2>
+            <h2>&#xbb;&#xbb;&#xbb;&#xbb;  Redistribute  &#xbb;&#xbb;&#xbb;&#xbb;</h2>
                 <table className="sliderTable">
                     <thead>
                         <tr>
                             <th key={0}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>5%</button> 
-                                </a>
+                                Adjusted £BN
                             </th>
                             <th key={1}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>10%</button> 
-                                </a>
+                                0&emsp;&emsp;&emsp;&emsp;&emsp;100%
+                            <Slider
+                                    onChangeComplete={sliderChanged}
+                            />
                             </th>
                             <th key={2}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>15%</button> 
-                                </a>
-                            </th>
-                            <th key={3}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>25%</button> 
-                                </a>
-                            </th>
-                            <th key={4}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>50%</button> 
-                                </a>
-                            </th>                                                                                    
+                                Adjusted #
+                            </th>                                                                                 
                         </tr>
                     </thead>
                     <tbody>
-                            <tr>
-                                <td>                                
-                                    2.9048
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                    126578
-                                </td>                                                                                                
-                            </tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td>0</td></tr>                            
                     </tbody>
                 </table>
 
@@ -124,6 +167,10 @@ const WealthRedistribution = () => {
                         </tr>
                     </thead>
                     <tbody>
+                            <tr>
+                                <td>{povertyRecords.Total}</td>
+                                <td>Total</td>
+                            </tr>                        
                             <tr>
                                 <td>{povertyRecords.Children}</td>
                                 <td>Children</td>
