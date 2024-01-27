@@ -1,21 +1,61 @@
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  createBrowserRouter,
+  RouterProvider,
+  Outlet
 } from "react-router-dom"
 
 import Home from "./pages/Home"
+import WealthRedistribution from "./pages/WealthRedistribution"
+import RealtimeContext from "./pages/RealtimeContext"
 import Debug from "./pages/Debug"
+import Navbar from "./components/Navbar"
+import Footer from "./components/Footer"
+
+
+const Layout = () => {
+  return(
+    <>
+      <Navbar /> 
+      <Outlet /> 
+      <Footer /> 
+    </>
+  );
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout/>,
+    children: [
+      {
+        path:"/",
+        element:<Home/>
+      },
+      {
+        path: "/WealthRedistribution",
+        element: <WealthRedistribution/>
+      },
+      {
+        path: "/RealtimeContext",
+        element: <RealtimeContext/>
+      },
+      {
+        path: "/Debug",
+        element: <Debug/>
+      },      
+    ]
+  }
+])
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/debug" element={<Debug/>}/>
-        </Routes>
-      </BrowserRouter>
+    <div className="app">
+      <div className="container">
+        <RouterProvider router={router}/>
+      </div>
     </div>
   );
 }

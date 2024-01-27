@@ -1,0 +1,29 @@
+.app{
+    display: flex;
+    .container{
+        justify-content: center;
+        
+        .link {
+            text-decoration: none;
+            color:black;        
+            font: 1.4em sans-serif;
+        }
+        .navbar {
+            img{
+                width: 70px;
+                margin-left: 50px;
+            }
+            width: 1200px;
+            .container{
+            padding: 10px 0px;
+            display: flex;
+            justify-content: space-between;
+            .logo{}
+            .links{
+                display: flex;
+                gap: 10px;
+            }
+            }
+        }     
+    }
+}

@@ -2,143 +2,19 @@
 
 import React from "react";
 import axios from "axios";
+import WealthComparison from "../images/wealth_comparison.png"
 
 import { useEffect } from 'react'
 import { useState } from 'react'
 
 const Home = () => {
-    // Load our static from the server side and populate the variables
-    const [wealthColumns, setWealthColumns] = useState([])
-    const [wealthRecords, setWealthRecords] = useState([])
-    const [povertyColumns, setPovertyColumns] = useState([])
-    const [povertyRecords, setPovertyRecords] = useState([])
-
-    useEffect(()=>{
-        const getData = async () =>{
-            try{
-                // Load Wealth Data
-                var res = await axios.get("http://localhost:8800/wealth_data")
-                var jsonObject = JSON.parse(res.data[0].JSON);
-                setWealthColumns(Object.keys(jsonObject.Wealth[0]))
-                setWealthRecords(jsonObject.Wealth)
-
-                // Load Poverty Data
-                res = await axios.get("http://localhost:8800/poverty_data")
-                jsonObject = JSON.parse(res.data[0].JSON);
-                setPovertyColumns(Object.keys(jsonObject.Poverty))
-                setPovertyRecords(jsonObject.Poverty)
-            }
-            catch(err){
-                console.log(err)
-            }        
-        }
-        getData()
-    },[])
-
     return (
-        <div>
+        <div className="home">
             <h1>UK Wealth Inequality</h1>
-            <div className="wealthDiv">
-                <h2>The top 20 richest families</h2>
-                <table className="wealthTable">
-                    <thead>
-                        <tr>
-                            <th key={0}>{wealthColumns[1]}</th>
-                            <th key={1}>{wealthColumns[0]}</th>
-                            <th key={2}>{wealthColumns[3]}</th>
-                            <th key={3}>{wealthColumns[2]} £BN</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            wealthRecords.map((wealthRecord, i) =>(
-                                <tr key={i}>
-                                    <td>{wealthRecord.Rank}</td>
-                                    <td>{wealthRecord.Name}</td>
-                                    <td>{wealthRecord.Industry}</td>
-                                    <td>{wealthRecord.Wealth}</td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div  className="sliderDiv">
-            <h2>Redistribution</h2>
-                <table className="sliderTable">
-                    <thead>
-                        <tr>
-                            <th key={0}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>5%</button> 
-                                </a>
-                            </th>
-                            <th key={1}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>10%</button> 
-                                </a>
-                            </th>
-                            <th key={2}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>15%</button> 
-                                </a>
-                            </th>
-                            <th key={3}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>25%</button> 
-                                </a>
-                            </th>
-                            <th key={4}>
-                                <a href="https://www.webcodzing.com/" target="_blank"> 
-                                    <button>50%</button> 
-                                </a>
-                            </th>                                                                                    
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <tr>
-                                <td>                                
-                                    2.9048
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                </td>
-                                <td>                                
-                                    126578
-                                </td>                                                                                                
-                            </tr>
-                    </tbody>
-                </table>
-
-            </div>            
-            <div  className="povertyDiv">
-                <h2>People living in poverty</h2>
-                <table className="povertyTable">
-                    <thead>
-                        <tr>
-                            <th key={0}>Category</th>
-                            <th key={1}>Count #</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <tr>
-                                <td>{povertyRecords.Children}</td>
-                                <td>Children</td>
-                            </tr>
-                            <tr>
-                                <td>{povertyRecords.Adults}</td>
-                                <td>Adults</td>
-                            </tr>
-                            <tr>
-                                <td>{povertyRecords.Pensioners}</td>
-                                <td>Pensioners</td>
-                            </tr>                            
-                    </tbody>
-                </table>
-            </div>
+            <p>Poverty is a huge problem in the UK and around the rest of the world. This has risen in recent years with international events like Covid, Brexit and the war in Ukraine having a large impact on individual wealth. More recently the energy crisis, high levels of inflation and increasing mortgage rates have compounded the financial problems people are facing. </p>
+            <p>Wealthy people are often less impacted by such events and in many cases, with the help of professional advisors, can often profit from them. This wealth inequality has continued to grow over the years and shows no signs of slowing. One shocking statistic is that the richest 50 families in the UK hold more wealth than the poorest 33.5M families. That’s half the population of the UK.</p>
+            <img src={WealthComparison} alt="Paris" class="WealthImage"></img>
+            <p>The aim of this website is to help visualise the huge wealth of the super-rich and also show the impacts of redistributing this wealth. Often when we hear statistics involving large numbers it’s difficult to comprehend them. We know a billion pounds is a lot of money but it’s hard to appreciate its size. This website will help to contextualise these numbers and the dynamic visualisations I provide can be used hopefully help redress the balance.</p>
         </div>
     )
 }
