@@ -21,3 +21,4 @@ Client:
     > npm i react-router-dom
     > npm i axios
     > npm i sass
+    > npm i rc-slider

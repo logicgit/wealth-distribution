@@ -10,7 +10,8 @@ import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
 import { adjustValue } from "../engine/engine";
 import { reduceValue } from "../engine/engine";
-import { reducedPovertyNumber } from "../engine/engine";
+import { reducePovertyNumber } from "../engine/engine";
+import { calculatePercentageChange } from "../engine/engine";
 
 // Load our static from the server side and populate the variables
 const WealthRedistribution = () => {
@@ -18,6 +19,9 @@ const WealthRedistribution = () => {
     const [wealthRecords, setWealthRecords] = useState([])
     const [povertyColumns, setPovertyColumns] = useState([])
     const [povertyRecords, setPovertyRecords] = useState([])
+
+    // Build up the string that explains what's happened
+    var explanationString = "The total wealth of the country's richest 20 families is £290.48 billion. The total number of people in poverty is 15.4 million."
 
     useEffect(()=>{
         const getData = async () =>{
@@ -39,6 +43,8 @@ const WealthRedistribution = () => {
             }        
         }
         getData()
+        document.getElementById("explanationString").innerHTML = explanationString;
+
     },[])
 
     // Slider has changed
@@ -54,15 +60,18 @@ const WealthRedistribution = () => {
         // Loop around the wealth columns, call adjustValue to reduce by the percentage
         // and set the corresponding value in our redistribution table
         var wealthTable = document.getElementsByClassName("wealthTable")[0];
+        var newTotalWealth = 0
         var wealthToShare = 0
         for (var i = 1, row; row = wealthTable.rows[i]; i++) {
             let wealthCells = row.cells;
             let wealthValue = wealthCells[3].innerHTML
-            sliderTable.rows[i].cells[0].innerHTML = reduceValue(wealthValue, value);
+            let adjustedWealth = reduceValue(wealthValue, value);
+            sliderTable.rows[i].cells[0].innerHTML = adjustedWealth;
 
             // Store the total wealth shared for later
             if (i == 1) {
                 wealthToShare = wealthValue;
+                newTotalWealth = adjustedWealth;
             }
         }
 
@@ -70,6 +79,7 @@ const WealthRedistribution = () => {
         // and set the corresponding value in our redistribution table
           var povertyTable = document.getElementsByClassName("povertyTable")[0];
           var totalPovertyCount = 0;
+          var newTotalPovertyCount = 0;
           for (var i = 1, row; row = povertyTable.rows[i]; i++) {
             let povertyCells = row.cells;
             let povertyCount = povertyCells[0].innerHTML;
@@ -79,14 +89,44 @@ const WealthRedistribution = () => {
                 totalPovertyCount = povertyCount
             } 
 
-            let adjustedPovertyCount = povertyCount - reducedPovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
-            sliderTable.rows[i].cells[2].innerHTML = adjustedPovertyCount;       
-        }     
+            // Reduce and set the poverty
+            let adjustedPovertyCount = reducePovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
+            sliderTable.rows[i].cells[4].innerHTML = adjustedPovertyCount;      
+            
+            // Store the new total poverty count for later
+            if (i == 1) {
+                newTotalPovertyCount = (totalPovertyCount - adjustedPovertyCount);
+            }             
+
+            // Set the % change
+            let adjustedPovertyPercentage = calculatePercentageChange(povertyCount, (povertyCount-adjustedPovertyCount));
+            sliderTable.rows[1].cells[3].innerHTML = adjustedPovertyPercentage;  
+
+            // Update the explanation string
+            if (adjustedPovertyPercentage == 0)
+            {
+                explanationString = "The total wealth of the country's richest 20 families is £290.48 billion. The total number of people in poverty is 15.4 million."
+                document.getElementById("explanationString").style.color = "red";
+            }   
+            else if (adjustedPovertyPercentage == 100)
+            {
+                explanationString = "Congratulations! You've just eradicated poverty in the UK. By redistributing 53% of the wealth from the super-rich to the poor you remove 15.4 million from poverty and the 20th wealthiest family in the country still has nearly £4 billion."
+                document.getElementById("explanationString").style.color = "green";
+            }   
+            else
+            {
+                explanationString = "You've resdistributed £" + newTotalWealth + " billon (" + value + "%) from the super-rich to the poor. This has moved " + newTotalPovertyCount + " people (" + adjustedPovertyPercentage + ")% out of poverty."
+                document.getElementById("explanationString").style.color = "orange";
+            }
+
+            document.getElementById("explanationString").innerHTML = explanationString;
+        }          
     };
 
     return (
         <div>
             <h1>Wealth Redistribution</h1>
+            <p id="explanationString"></p>
             <div className="wealthDiv">
                 <h2>The top 20 richest families</h2>
                 <table className="wealthTable">
@@ -120,39 +160,40 @@ const WealthRedistribution = () => {
                             <th key={0}>
                                 Adjusted £BN
                             </th>
-                            <th key={1}>
-                                0&emsp;&emsp;&emsp;&emsp;&emsp;100%
+                            <th>%</th>
+                            <th key={1}>                                
                             <Slider
                                     onChangeComplete={sliderChanged}
                             />
                             </th>
+                            <th>%</th>                            
                             <th key={2}>
                                 Adjusted #
                             </th>                                                                                 
                         </tr>
                     </thead>
                     <tbody>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>
-                            <tr><td>0.0</td><td></td><td>0</td></tr>                            
+                            <tr><td>0.0</td><td>0</td><td></td><td>0</td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td></td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td></td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td></td><td></td><td>0</td></tr>
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>      
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>  
+                            <tr><td>0.0</td><td></td><td></td><td></td><td></td></tr>                                                    
                     </tbody>
                 </table>
 
@@ -162,8 +203,8 @@ const WealthRedistribution = () => {
                 <table className="povertyTable">
                     <thead>
                         <tr>
-                            <th key={0}>Category</th>
-                            <th key={1}>Count #</th>
+                            <th key={0}>Count #</th>
+                            <th key={1}>Category</th>
                         </tr>
                     </thead>
                     <tbody>

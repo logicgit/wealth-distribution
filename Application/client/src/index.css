@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+#explanationString {
+    height: 75px;
+}
+
 .WealthImage 
 {
   display: block;
@@ -189,15 +193,29 @@ h2
 .sliderTable td {
     width: 425px;
     padding: 12px 15px;
+    table-layout: fixed;
 }
 
 .sliderTable td:nth-child(1){
+  width: 10%;
   color: red;
 }
 
-.sliderTable td:nth-child(3){
-  color: green;
+.sliderTable td:nth-child(2){
+  color: red;
+  width: 10%;  
 }
+
+.sliderTable td:nth-child(4){
+  color: green;
+  width: 10%;  
+}
+
+.sliderTable td:nth-child(5){
+  color: green;
+  width: 10%;  
+}
+
 
 .sliderTable td:nth-child(2){
   text-align: center;

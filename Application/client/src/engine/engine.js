@@ -20,7 +20,7 @@
     // The wealthToShare divided by the povertyLine is the number of people who can be removed
     // Convert inbound figure from billions to pounds
     // We need to work out what % of the total pot each demopgraphic can have
-      export function reducedPovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value) {
+      export function reducePovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value) {
         var wealthToShareInPounds = wealthToShare * 1000000000 * (value/100.0);
 
         // Adjust wealth to share for each demographic
@@ -30,8 +30,23 @@
         else {
             wealthToShareInPounds = (povertyCount / totalPovertyCount) * wealthToShareInPounds;
         }
-        
+
         var numberOfPeopleOutOfPoverty = Math.floor(wealthToShareInPounds / povertyLine);
+        povertyCount -= numberOfPeopleOutOfPoverty;
+        
         // Handle -ve numbers
-        return numberOfPeopleOutOfPoverty > povertyCount ? povertyCount : numberOfPeopleOutOfPoverty;
+        return povertyCount < 0 ? 0 : povertyCount;
     };
+
+    // Helper function to work out % change
+    export function calculatePercentageChange(originalValue, newValue) {
+        var percentChange = (newValue / originalValue) * 100;
+        return roundToDecimalPlaces(percentChange, 1);
+    }
+
+    // Help function to round to x decimal places
+    function roundToDecimalPlaces(num, decimalPlaces) {
+        const factor = Math.pow(10, decimalPlaces);
+        return Math.round(num * factor) / factor;
+      }
+      
