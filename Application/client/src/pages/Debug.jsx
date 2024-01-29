@@ -10,7 +10,7 @@ const Debug = () => {
     const [povertyData, setPovertyData] = useState([])
     const [comparisonData, setComparisonData] = useState([])
 
-    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
     useEffect(()=>{
         const getData = async () =>{
@@ -30,7 +30,7 @@ const Debug = () => {
                 res = await axios.get("http://localhost:8800/poverty_data")
                 setPovertyData(res.data[0].JSON) 
                 await sleep(2000)
-                
+
                 res = await axios.get("http://localhost:8800/comparison_data")
                 setComparisonData(res.data[0].JSON)                    
             }

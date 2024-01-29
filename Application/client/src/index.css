@@ -268,9 +268,10 @@ button:hover {
 {
     float: left;
     width: 30%;
-    height: 240px;
+    height: 200px;
     width: 1024px;
-    margin: 25px 125px;
+    margin: 0px 125px;
+    margin-top: 50px;
 }
 
 .realTimeTable
@@ -305,4 +306,59 @@ button:hover {
     text-align: center;
 }
 
+.comparisonDiv
+{
 
+    width: 30%;
+    height: 200px;
+    width: 1024px;
+    margin: 0px 125px;
+    margin-top: 50px;
+}
+
+.comparisonTable
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 1.2em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.comparisonTable thead tr {
+  background-color: #48d44f;;
+  color: #ffffff;
+  text-align: left;
+}
+
+.comparisonTable th
+{
+  height: 35px;
+  width: 425px;
+  padding: 12px 15px;
+  text-align: center;  
+}
+
+.comparisonTable td {
+    width: 425px;
+    padding: 12px 15px;
+    table-layout: fixed;
+    font-size: 1.2em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+#Image1{
+  width: 100px;
+  height: 100px;
+}
+
+#Image2{
+  width: 100px;
+  height: 100px;
+}
+
+#Image3{
+  width: 120px;
+  height: 120px;
+}

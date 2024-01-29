@@ -59,7 +59,7 @@
         // Return interest since page loaded
         var interest = Math.floor((currentTimeInMillisecs - pageLoadedTimeInMillisecs) / 1000 * secondInterest);
 
-        return interest.toLocaleString();
+        return interest;
     }
 
     // Calculate interest start of day
@@ -83,7 +83,7 @@
         // Return interest since page loaded
         var interest = Math.floor((currentTimeInMillisecs - startOfDayInMillisecs) / 1000 * secondInterest);
 
-        return interest.toLocaleString();
+        return interest;
     }
 
     // Calculate interest start of day
@@ -109,7 +109,7 @@
         // Return interest since page loaded
         var interest = Math.floor((currentTimeInMillisecs - startOfDayInMillisecs) / 1000 * secondInterest);
 
-        return interest.toLocaleString();
+        return interest;
     }    
     
     
@@ -119,7 +119,11 @@
         return roundToDecimalPlaces(percentChange, 1);
     }
 
-    // Help function to round to x decimal places
+    export function howManyCanWeAfford(cost, pageInterest){
+        return Math.floor(pageInterest / cost);
+    }
+
+    // Helper function to round to x decimal places
     function roundToDecimalPlaces(num, decimalPlaces) {
         const factor = Math.pow(10, decimalPlaces);
         return Math.round(num * factor) / factor;

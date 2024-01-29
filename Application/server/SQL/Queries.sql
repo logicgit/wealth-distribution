@@ -5,10 +5,10 @@ INSERT INTO json_data
 VALUES ('Interest Rates', '{"Interest Rates" : {"UK" : "5.25"}}' );
 
 INSERT INTO json_data
-VALUES ('Poverty Data', '{"Poverty" : {"Children" : "3411963",  "Adults" : "7211963",  "Pensioners" : "1211963"}}' );
+VALUES ('Poverty Data', '{"Poverty" : {"Total" : "15400000", "Children" : "4200000",  "Adults" : "8100000",  "Pensioners" : "2100000"}}' );
 
 INSERT INTO json_data
-VALUES ('Comparison Data', '{"Comparison Items" : [{"Name" : "iPhone 15 Pro","Cost" : "1000","Image" : "images/iphone15pro.png"},{"Name" : "BMW M3","Cost" : "82450","Image" : "images/bmwm3.png"}]}' );
+VALUES ('Comparison Data', '{"Comparison Items" : [{"Name" : "iPhone","Cost" : "1000","Image" : "../images/phone.png"},{"Name" : "Ferrari","Cost" : "200000","Image" : "images/ferrari.png"},{"Name" : "Super Yacht","Cost" : "20000000","Image" : "images/boat.png"}]}' );
 
 INSERT INTO json_data
 VALUES ('Wealth Data',
@@ -42,6 +42,6 @@ VALUES ('Wealth Data',
 SELECT JSON from json_data
 
 DELETE FROM json_data
-WHERE Description = 'Wealth Data'
+WHERE Description = 'Comparison Data'
 WHERE Description = 'Book data'
  UPDATE json_data SET JSON = '{"Interest Rates": {"UK": "5.25}}' WHERE Description = 'Interest Rates'
