@@ -8,8 +8,8 @@ import { useState } from 'react'
 
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
-import { adjustValue } from "../engine/engine";
 import { reduceValue } from "../engine/engine";
+import { reducedValue } from "../engine/engine";
 import { reducePovertyNumber } from "../engine/engine";
 import { calculatePercentageChange } from "../engine/engine";
 
@@ -17,11 +17,7 @@ import { calculatePercentageChange } from "../engine/engine";
 const WealthRedistribution = () => {
     const [wealthColumns, setWealthColumns] = useState([])
     const [wealthRecords, setWealthRecords] = useState([])
-    const [povertyColumns, setPovertyColumns] = useState([])
     const [povertyRecords, setPovertyRecords] = useState([])
-
-    // Build up the string that explains what's happened
-    var explanationString = "The total wealth of the country's richest 20 families is £290.48 billion. The total number of people in poverty is 15.4 million."
 
     useEffect(()=>{
         const getData = async () =>{
@@ -29,14 +25,13 @@ const WealthRedistribution = () => {
                 // Load Wealth Data
                 var res = await axios.get("http://localhost:8800/wealth_data")
                 var jsonObject = JSON.parse(res.data[0].JSON);
-                setWealthColumns(Object.keys(jsonObject.Wealth[0]))
-                setWealthRecords(jsonObject.Wealth)
+                setWealthColumns(Object.keys(jsonObject.Wealth[0]));
+                setWealthRecords(jsonObject.Wealth);
 
                 // Load Poverty Data
                 res = await axios.get("http://localhost:8800/poverty_data")
                 jsonObject = JSON.parse(res.data[0].JSON);
-                setPovertyColumns(Object.keys(jsonObject.Poverty))
-                setPovertyRecords(jsonObject.Poverty)
+                setPovertyRecords(jsonObject.Poverty);
             }
             catch(err){
                 console.log(err)
@@ -46,6 +41,9 @@ const WealthRedistribution = () => {
         document.getElementById("explanationString").innerHTML = explanationString;
 
     },[])
+
+    // Build up the string that explains what's happened
+    var explanationString = "The total wealth of the country's richest 20 families is £290.48 billion. The total number of people in poverty is 15.4 million."
 
     // Slider has changed
     // Write the % to the table
@@ -62,6 +60,7 @@ const WealthRedistribution = () => {
         var wealthTable = document.getElementsByClassName("wealthTable")[0];
         var newTotalWealth = 0
         var wealthToShare = 0
+        var totalReducedValue = 0
         for (var i = 1, row; row = wealthTable.rows[i]; i++) {
             let wealthCells = row.cells;
             let wealthValue = wealthCells[3].innerHTML
@@ -72,6 +71,7 @@ const WealthRedistribution = () => {
             if (i == 1) {
                 wealthToShare = wealthValue;
                 newTotalWealth = adjustedWealth;
+                totalReducedValue = reducedValue(wealthValue, value);
             }
         }
 
@@ -86,12 +86,12 @@ const WealthRedistribution = () => {
 
             // Store the total poverty count for later
             if (i == 1) {
-                totalPovertyCount = povertyCount
+                totalPovertyCount = parseInt(povertyCount);
             } 
 
             // Reduce and set the poverty
             let adjustedPovertyCount = reducePovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
-            sliderTable.rows[i].cells[4].innerHTML = adjustedPovertyCount;      
+            sliderTable.rows[i].cells[4].innerHTML = adjustedPovertyCount.toLocaleString();      
             
             // Store the new total poverty count for later
             if (i == 1) {
@@ -105,17 +105,17 @@ const WealthRedistribution = () => {
             // Update the explanation string
             if (adjustedPovertyPercentage == 0)
             {
-                explanationString = "The total wealth of the country's richest 20 families is £290.48 billion. The total number of people in poverty is 15.4 million."
+                explanationString = "The total wealth of the country's richest 20 families is £ " + wealthToShare + " billion. The total number of people in poverty is " + totalPovertyCount.toLocaleString() + "."
                 document.getElementById("explanationString").style.color = "red";
             }   
             else if (adjustedPovertyPercentage == 100)
             {
-                explanationString = "Congratulations! You've just eradicated poverty in the UK. By redistributing 53% of the wealth from the super-rich to the poor you remove 15.4 million from poverty and the 20th wealthiest family in the country still has nearly £4 billion."
+                explanationString = "Congratulations! You've just eradicated poverty in the UK. By redistributing 53% of the wealth from the super-rich to the poor you remove " + totalPovertyCount.toLocaleString() + " from poverty and the 20th wealthiest family in the country still has nearly £4 billion."
                 document.getElementById("explanationString").style.color = "green";
             }   
             else
             {
-                explanationString = "You've resdistributed £" + newTotalWealth + " billon (" + value + "%) from the super-rich to the poor. This has moved " + newTotalPovertyCount + " people (" + adjustedPovertyPercentage + ")% out of poverty."
+                explanationString = "You've resdistributed £" + totalReducedValue + " billon (" + value + "%) from the super-rich to the poor. This has moved " + newTotalPovertyCount.toLocaleString() + " people (" + adjustedPovertyPercentage + ")% out of poverty."
                 document.getElementById("explanationString").style.color = "orange";
             }
 

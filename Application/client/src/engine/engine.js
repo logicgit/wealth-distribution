@@ -3,16 +3,22 @@
 
     // Amount of money required to remove someone from poverty
     const povertyLine = 10000
+
+    // Store the dateTime when page loaded
+    const pageLoadedTimeInMillisecs = Date.now();
+
+    // Interest rate
+    const interestRate = 0.05;
     
-    // Adjust the value by the %
-    export function adjustValue(value, percent) {
+    // Reduce the value by the %
+    export function reduceValue(value, percent) {
         var adjustedValue =  value * ((100-percent)/100.0);
         return Math.floor(adjustedValue * 100) / 100
     };
 
-     // Reduce the value by the %
-    export function reduceValue(value, percent) {
-        var adjustedValue =  value * ((100-percent)/100.0);
+    // Return the value reduced by the %
+    export function reducedValue(value, percent) {
+        var adjustedValue =  value * ((percent)/100.0);
         return Math.floor(adjustedValue * 100) / 100
     };
 
@@ -24,7 +30,7 @@
         var wealthToShareInPounds = wealthToShare * 1000000000 * (value/100.0);
 
         // Adjust wealth to share for each demographic
-        if (totalPovertyCount == povertyCount) {
+        if (totalPovertyCount === povertyCount) {
             // Do nothing as this is the total
         }
         else {
@@ -38,6 +44,75 @@
         return povertyCount < 0 ? 0 : povertyCount;
     };
 
+    // Calculate interest since page loaded
+    // Work out how many seconds has elapsed
+    // Calculate interest using interestRate constant
+    export function calcInterestSincePageLoaded(wealth) {
+        var currentTimeInMillisecs = Date.now();
+
+        // Annual interest
+        var annualInterest = wealth * interestRate;
+
+        // Interest in one second
+        var secondInterest = annualInterest / 365 / 24 / 3600;
+
+        // Return interest since page loaded
+        var interest = Math.floor((currentTimeInMillisecs - pageLoadedTimeInMillisecs) / 1000 * secondInterest);
+
+        return interest.toLocaleString();
+    }
+
+    // Calculate interest start of day
+    // Work out how many seconds has elapsed
+    // Calculate interest using interestRate constant
+    export function calcInterestSinceStartOfDay(wealth) {
+        // Parse the input date
+        const inputDate = new Date();
+
+        // Set the input date to midnight
+        inputDate.setHours(0, 0, 0, 0);
+        var startOfDayInMillisecs = inputDate.getTime();
+        var currentTimeInMillisecs = Date.now();
+
+        // Annual interest
+        var annualInterest = wealth * interestRate;
+
+        // Interest in one second
+        var secondInterest = annualInterest / 365 / 24 / 3600;
+
+        // Return interest since page loaded
+        var interest = Math.floor((currentTimeInMillisecs - startOfDayInMillisecs) / 1000 * secondInterest);
+
+        return interest.toLocaleString();
+    }
+
+    // Calculate interest start of day
+    // Work out how many seconds has elapsed
+    // Calculate interest using interestRate constant
+    export function calcInterestSinceStartOfYear(wealth) {
+        // Parse the input date
+        const inputDate = new Date();
+
+        // Set the input date to midnight
+        inputDate.setMonth(0);
+        inputDate.setDate(1);
+        inputDate.setHours(0, 0, 0, 0);
+        var startOfDayInMillisecs = inputDate.getTime();
+        var currentTimeInMillisecs = Date.now();
+
+        // Annual interest
+        var annualInterest = wealth * interestRate;
+
+        // Interest in one second
+        var secondInterest = annualInterest / 365 / 24 / 3600;
+
+        // Return interest since page loaded
+        var interest = Math.floor((currentTimeInMillisecs - startOfDayInMillisecs) / 1000 * secondInterest);
+
+        return interest.toLocaleString();
+    }    
+    
+    
     // Helper function to work out % change
     export function calculatePercentageChange(originalValue, newValue) {
         var percentChange = (newValue / originalValue) * 100;
@@ -48,5 +123,6 @@
     function roundToDecimalPlaces(num, decimalPlaces) {
         const factor = Math.pow(10, decimalPlaces);
         return Math.round(num * factor) / factor;
-      }
-      
+    }
+
+    

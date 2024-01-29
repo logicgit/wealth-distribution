@@ -16,6 +16,10 @@ code {
     height: 75px;
 }
 
+#introString {
+  height: 75px;
+}
+
 .WealthImage 
 {
   display: block;
@@ -37,7 +41,8 @@ p
 
 h1 
 { 
-  text-align: center 
+  text-align: center;
+  position:center;
 }
 
 h2
@@ -203,12 +208,12 @@ h2
 
 .sliderTable td:nth-child(2){
   color: red;
-  width: 10%;  
+  width: 15%;  
 }
 
 .sliderTable td:nth-child(4){
   color: green;
-  width: 10%;  
+  width: 15%;  
 }
 
 .sliderTable td:nth-child(5){
@@ -259,4 +264,45 @@ button:hover {
   color: white;
 }
 
-h1 { text-align: center }
+.realTimeDiv
+{
+    float: left;
+    width: 30%;
+    height: 240px;
+    width: 1024px;
+    margin: 25px 125px;
+}
+
+.realTimeTable
+{
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 1.2em;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.realTimeTable thead tr {
+  background-color: #5cb6eb;;
+  color: #ffffff;
+  text-align: left;
+}
+
+.realTimeTable th
+{
+  height: 35px;
+  width: 425px;
+  padding: 12px 15px;
+  text-align: center;  
+}
+
+.realTimeTable td {
+    width: 425px;
+    padding: 12px 15px;
+    table-layout: fixed;
+    font-size: 1.2em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+
