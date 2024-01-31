@@ -18,6 +18,8 @@ import PhoneImage from "../images/phone.png";
 import BoatImage from "../images/boat.png";
 
 
+
+
 const RealtimeContext = () => {
     // Handle user changing page so we can stop our run loop
     var pageUnloading = false;
@@ -62,93 +64,98 @@ const RealtimeContext = () => {
         var wealthRecord = null;
         var comparisonRecord = null;
 
-        while (true) {
-            // Sleep to ensure page is loaded 
-            await sleep(100);   
-        
-            // Set the intro text and store the total wealth
-            wealthRecord = wealthRecords[1];
-            comparisonRecord = comparisonData[1];
-
-            if (wealthRecord == null || comparisonRecord == null) continue;
+        try {
+            while (true) {
+                // Sleep to ensure page is loaded 
+                await sleep(100);   
             
-            var introString = "The richest person in the UK is currently " + wealthRecord.Name + " with a total wealth of £" + wealthRecord.Wealth + "BN. We know that's a lot of money but actually how much is it and how much does it grow by? Let's assume a conservative growth rate of 5% ..."
-            var introStringElement = document.getElementById("introString")
-            totalWealth = wealthRecord.Wealth * 1000000000;
-            
-            if (introStringElement) introStringElement.innerHTML = introString;
-            break;
-        }
-        var tmp = 0;
-
-        // Call into our calc engine to get the growth values and set them in our realTimeTable
-        // Call into our calc engine and update the comparisonTable
-        var headingPopulated = false;
-        while (true) {          
-            var realTimeTable = document.getElementsByClassName("realTimeTable")[0];
-            var comparisonTable = document.getElementsByClassName("comparisonTable")[0];
-            
-            // Since page loaded
-            var pageInterest = calcInterestSincePageLoaded(totalWealth);
-            if (realTimeTable.rows != null) realTimeTable.rows[1].cells[0].innerHTML = pageInterest.toLocaleString();      
-
-            // Since start of day
-            var dayInterest = calcInterestSinceStartOfDay(totalWealth);
-            if (realTimeTable.rows != null) realTimeTable.rows[1].cells[1].innerHTML = dayInterest.toLocaleString();         
-
-            // Since start of year
-            var yearInterest = calcInterestSinceStartOfYear(totalWealth);
-            if (realTimeTable.rows != null) realTimeTable.rows[1].cells[2].innerHTML = yearInterest.toLocaleString();         
-
-            // Comparison items
-            // Populate the column headers
-            if (!headingPopulated) {
-                if (comparisonTable.rows != null) {
-                    for (var i = 0; i < comparisonData.length; i++)
-                    {
-                        var name = comparisonData[i].Name;
-                        var cost = parseInt(comparisonData[i].Cost);
-                        comparisonTable.rows[0].cells[i].innerHTML = name + " (£" + cost.toLocaleString() + ")";
-                    }
-                }
-
-                // Populate the images
-                if (comparisonTable.rows != null) {
-                    for (var i = 0; i < comparisonData.length; i++)
-                    {
-                        // TODO not working
-                        var image = comparisonData[i].Image;
-                        //document.getElementById("Image1").src = {PhoneImage};
-                    }
-                }                
-
-                headingPopulated = true;
+                // Set the intro text and store the total wealth
+                wealthRecord = wealthRecords[1];
+                comparisonRecord = comparisonData[1];
+    
+                if (wealthRecord == null || comparisonRecord == null) continue;
+                
+                var introString = "The richest person in the UK is currently " + wealthRecord.Name + " with a total wealth of £" + wealthRecord.Wealth + "BN. We know that's a lot of money but actually how much is it and how much does it grow by? Let's assume a conservative growth rate of 5% ..."
+                var introStringElement = document.getElementById("introString")
+                totalWealth = wealthRecord.Wealth * 1000000000;
+                
+                if (introStringElement) introStringElement.innerHTML = introString;
+                break;
             }
-
-            // Populate the counts
-            if (comparisonTable.rows != null) {
-                for (var i = 0; i < comparisonData.length; i++)
-                {
-                    var cost = parseInt(comparisonData[i].Cost);
-                    var amount = 0;
-                    switch (i) {
-                        case 0:
-                            amount = howManyCanWeAfford(cost, parseInt(pageInterest));
-                            break;
-                        case 1:
-                            amount = howManyCanWeAfford(cost, parseInt(dayInterest));
-                            break;
-                        case 2:
-                            amount = howManyCanWeAfford(cost, parseInt(yearInterest));
-                            break;
+            var tmp = 0;
+    
+            // Call into our calc engine to get the growth values and set them in our realTimeTable
+            // Call into our calc engine and update the comparisonTable
+            var headingPopulated = false;
+            while (true) {          
+                var realTimeTable = document.getElementsByClassName("realTimeTable")[0];
+                var comparisonTable = document.getElementsByClassName("comparisonTable")[0];
+                
+                // Since page loaded
+                var pageInterest = calcInterestSincePageLoaded(totalWealth);
+                if (realTimeTable.rows != null) realTimeTable.rows[1].cells[0].innerHTML = pageInterest.toLocaleString();      
+    
+                // Since start of day
+                var dayInterest = calcInterestSinceStartOfDay(totalWealth);
+                if (realTimeTable.rows != null) realTimeTable.rows[1].cells[1].innerHTML = dayInterest.toLocaleString();         
+    
+                // Since start of year
+                var yearInterest = calcInterestSinceStartOfYear(totalWealth);
+                if (realTimeTable.rows != null) realTimeTable.rows[1].cells[2].innerHTML = yearInterest.toLocaleString();         
+    
+                // Comparison items
+                // Populate the column headers
+                if (!headingPopulated) {
+                    if (comparisonTable.rows != null) {
+                        for (var i = 0; i < comparisonData.length; i++)
+                        {
+                            var name = comparisonData[i].Name;
+                            var cost = parseInt(comparisonData[i].Cost);
+                            comparisonTable.rows[0].cells[i].innerHTML = name + " (£" + cost.toLocaleString() + ")";
+                        }
                     }
-                    howManyCanWeAfford(cost, parseInt(pageInterest));
-                    comparisonTable.rows[2].cells[i].innerHTML = amount;
+    
+                    // Populate the images
+                    if (comparisonTable.rows != null) {
+                        for (var i = 0; i < comparisonData.length; i++)
+                        {
+                            // TODO not working
+                            var image = comparisonData[i].Image;
+                            //document.getElementById("Image1").src = {PhoneImage};
+                        }
+                    }                
+    
+                    headingPopulated = true;
                 }
-            }         
-
-            await sleep(100); 
+    
+                // Populate the counts
+                if (comparisonTable.rows != null) {
+                    for (var i = 0; i < comparisonData.length; i++)
+                    {
+                        var cost = parseInt(comparisonData[i].Cost);
+                        var amount = 0;
+                        switch (i) {
+                            case 0:
+                                amount = howManyCanWeAfford(cost, parseInt(pageInterest));
+                                break;
+                            case 1:
+                                amount = howManyCanWeAfford(cost, parseInt(dayInterest));
+                                break;
+                            case 2:
+                                amount = howManyCanWeAfford(cost, parseInt(yearInterest));
+                                break;
+                        }
+                        howManyCanWeAfford(cost, parseInt(pageInterest));
+                        comparisonTable.rows[2].cells[i].innerHTML = amount;
+                    }
+                }         
+    
+                await sleep(100); 
+            }
+        } catch (error) {
+            console.log("Error in calculation loop: " + error);
         }
+        
     }
 
     calculationLoop();  
@@ -176,8 +183,11 @@ const RealtimeContext = () => {
                 </table>
             </div>
             <p>So these are huge numbers and that's just how much their wealth is growing by! For each of these counters let's see what this money could buy them!</p>
-            <div className="comparisonDiv">
+
+            <div className="comparisonDiv">              
+
                 <table className="comparisonTable">
+
                     <thead>
                         <tr>
                             <th></th>
@@ -192,6 +202,12 @@ const RealtimeContext = () => {
                             <td><img src={BoatImage} alt="image3" id="Image3"></img></td>
                         </tr>  
                         <tr>
+                            <td>
+                            </td>
+                            <td></td>
+                            <td></td>                                                  
+                        </tr>   
+                        <tr>                    
                             <td></td>
                             <td></td>
                             <td></td>                                                  

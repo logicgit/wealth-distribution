@@ -22,6 +22,9 @@ const Navbar = () => {
                     <Link className='link' to="/RealtimeContext">
                         <h6>Real-time</h6>
                     </Link>
+                    <Link className='link' to="/debug">
+                        <h6>Debug</h6>
+                    </Link>                    
                 </div>
             </div>
         </div>

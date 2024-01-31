@@ -10,25 +10,37 @@ const db = mysql.createConnection({
     database:"wealth_inequality_json"
 })
 
+
+// Write the key/value pair to the DB
 export function updateDB(key, value) {
-    const query = "UPDATE json_data SET JSON = '" + value +  "' WHERE Description = '" + key + "'"
-    console.log("Db Update SQL: " + query)
-    db.query(query,(err,data)=>{
-        if (err) console.log(err)
-        return console.log("Success")
-    })
+    try {
+        const query = "UPDATE json_data SET JSON = '" + value +  "' WHERE Description = '" + key + "'";
+        console.log("Db Update SQL: " + query);
+        db.query(query,(err,data)=>{
+            if (err) console.log(err);
+            return console.log("Success");
+        })
+    } catch (error) {
+        console.log("Db Update Error: " + error);
+    }
 }
 
+// Return the JSON for the given description
 export function getData(description)
 {
-    const query = "SELECT * FROM json_data WHERE Description = '" + description + "'"
-    console.log("getData SQL: " + query)
-    var returnData
-    db.query(query,(err,data)=>{
-        if (err) console.log("DB Error: " + err)
-        console.log("data: " + data)
-        return data
-    })
-    console.log("returnData: " + returnData)
-    return returnData
+    try {
+        const query = "SELECT * FROM json_data WHERE Description = '" + description + "'";
+        console.log("getData SQL: " + query);
+        var returnData;
+        db.query(query,(err,data)=>{
+            if (err) console.log("DB Error: " + err)
+            console.log("data: " + data);
+            return data;
+        })
+        console.log("returnData: " + returnData);
+        return returnData;
+    } catch (error) {
+        console.log("Db fetch Error: " + error);
+    }
+    return null;
 }

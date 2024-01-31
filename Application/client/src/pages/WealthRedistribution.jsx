@@ -18,6 +18,7 @@ const WealthRedistribution = () => {
     const [wealthColumns, setWealthColumns] = useState([])
     const [wealthRecords, setWealthRecords] = useState([])
     const [povertyRecords, setPovertyRecords] = useState([])
+    const [interestRates, setInterestRateData] = useState([])
 
     useEffect(()=>{
         const getData = async () =>{
@@ -32,6 +33,10 @@ const WealthRedistribution = () => {
                 res = await axios.get("http://localhost:8800/poverty_data")
                 jsonObject = JSON.parse(res.data[0].JSON);
                 setPovertyRecords(jsonObject.Poverty);
+
+                // Load Interest rate data
+                res = await axios.get("http://localhost:8800/interest_rates")
+                setInterestRateData(res.data[0].JSON)
             }
             catch(err){
                 console.log(err)
@@ -50,77 +55,82 @@ const WealthRedistribution = () => {
     // Call the CalcEngine to get updated wealth data
     // Call the CalcEngine to get updated poverty data
     const sliderChanged = (value) => {
-        // Get our cell and set the %
-        var sliderTable = document.getElementsByClassName("sliderTable")[0];
-        let percentCells = sliderTable.rows[1].cells;
-        percentCells[1].innerHTML = value + "%";
+        try {
+            // Get our cell and set the %
+            var sliderTable = document.getElementsByClassName("sliderTable")[0];
+            let percentCells = sliderTable.rows[1].cells;
+            percentCells[1].innerHTML = value + "%";
 
-        // Loop around the wealth columns, call adjustValue to reduce by the percentage
-        // and set the corresponding value in our redistribution table
-        var wealthTable = document.getElementsByClassName("wealthTable")[0];
-        var newTotalWealth = 0
-        var wealthToShare = 0
-        var totalReducedValue = 0
-        for (var i = 1, row; row = wealthTable.rows[i]; i++) {
-            let wealthCells = row.cells;
-            let wealthValue = wealthCells[3].innerHTML
-            let adjustedWealth = reduceValue(wealthValue, value);
-            sliderTable.rows[i].cells[0].innerHTML = adjustedWealth;
+            // Loop around the wealth columns, call adjustValue to reduce by the percentage
+            // and set the corresponding value in our redistribution table
+            var wealthTable = document.getElementsByClassName("wealthTable")[0];
+            var newTotalWealth = 0
+            var wealthToShare = 0
+            var totalReducedValue = 0
+            for (var i = 1, row; row = wealthTable.rows[i]; i++) {
+                let wealthCells = row.cells;
+                let wealthValue = wealthCells[3].innerHTML
+                let adjustedWealth = reduceValue(wealthValue, value);
+                sliderTable.rows[i].cells[0].innerHTML = adjustedWealth;
 
-            // Store the total wealth shared for later
-            if (i == 1) {
-                wealthToShare = wealthValue;
-                newTotalWealth = adjustedWealth;
-                totalReducedValue = reducedValue(wealthValue, value);
+                // Store the total wealth shared for later
+                if (i == 1) {
+                    wealthToShare = wealthValue;
+                    newTotalWealth = adjustedWealth;
+                    totalReducedValue = reducedValue(wealthValue, value);
+                }
             }
-        }
 
-        // Loop around the poverty columns, call adjustValue to reduce by the percentage
-        // and set the corresponding value in our redistribution table
-          var povertyTable = document.getElementsByClassName("povertyTable")[0];
-          var totalPovertyCount = 0;
-          var newTotalPovertyCount = 0;
-          for (var i = 1, row; row = povertyTable.rows[i]; i++) {
-            let povertyCells = row.cells;
-            let povertyCount = povertyCells[0].innerHTML;
+            // Loop around the poverty columns, call adjustValue to reduce by the percentage
+            // and set the corresponding value in our redistribution table
+            var povertyTable = document.getElementsByClassName("povertyTable")[0];
+            var totalPovertyCount = 0;
+            var newTotalPovertyCount = 0;
+            for (var i = 1, row; row = povertyTable.rows[i]; i++) {
+                let povertyCells = row.cells;
+                let povertyCount = povertyCells[0].innerHTML;
 
-            // Store the total poverty count for later
-            if (i == 1) {
-                totalPovertyCount = parseInt(povertyCount);
-            } 
+                // Store the total poverty count for later
+                if (i == 1) {
+                    totalPovertyCount = parseInt(povertyCount);
+                } 
 
-            // Reduce and set the poverty
-            let adjustedPovertyCount = reducePovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
-            sliderTable.rows[i].cells[4].innerHTML = adjustedPovertyCount.toLocaleString();      
+                // Reduce and set the poverty
+                let adjustedPovertyCount = reducePovertyNumber(totalPovertyCount, povertyCount, wealthToShare, value); 
+                sliderTable.rows[i].cells[4].innerHTML = adjustedPovertyCount.toLocaleString();      
+                
+                // Store the new total poverty count for later
+                if (i == 1) {
+                    newTotalPovertyCount = (totalPovertyCount - adjustedPovertyCount);
+                }             
+
+                // Set the % change
+                let adjustedPovertyPercentage = calculatePercentageChange(povertyCount, (povertyCount-adjustedPovertyCount));
+                sliderTable.rows[1].cells[3].innerHTML = adjustedPovertyPercentage;  
+
+                // Update the explanation string
+                if (adjustedPovertyPercentage == 0)
+                {
+                    explanationString = "The total wealth of the country's richest 20 families is £ " + wealthToShare + " billion. The total number of people in poverty is " + totalPovertyCount.toLocaleString() + "."
+                    document.getElementById("explanationString").style.color = "red";
+                }   
+                else if (adjustedPovertyPercentage == 100)
+                {
+                    explanationString = "Congratulations! You've just eradicated poverty in the UK. By redistributing 53% of the wealth from the super-rich to the poor you remove " + totalPovertyCount.toLocaleString() + " from poverty and the 20th wealthiest family in the country still has nearly £4 billion."
+                    document.getElementById("explanationString").style.color = "green";
+                }   
+                else
+                {
+                    explanationString = "You've resdistributed £" + totalReducedValue + " billon (" + value + "%) from the super-rich to the poor. This has moved " + newTotalPovertyCount.toLocaleString() + " people (" + adjustedPovertyPercentage + ")% out of poverty."
+                    document.getElementById("explanationString").style.color = "orange";
+                }
+
+                document.getElementById("explanationString").innerHTML = explanationString;
+            }     
+        } catch (error) {
             
-            // Store the new total poverty count for later
-            if (i == 1) {
-                newTotalPovertyCount = (totalPovertyCount - adjustedPovertyCount);
-            }             
-
-            // Set the % change
-            let adjustedPovertyPercentage = calculatePercentageChange(povertyCount, (povertyCount-adjustedPovertyCount));
-            sliderTable.rows[1].cells[3].innerHTML = adjustedPovertyPercentage;  
-
-            // Update the explanation string
-            if (adjustedPovertyPercentage == 0)
-            {
-                explanationString = "The total wealth of the country's richest 20 families is £ " + wealthToShare + " billion. The total number of people in poverty is " + totalPovertyCount.toLocaleString() + "."
-                document.getElementById("explanationString").style.color = "red";
-            }   
-            else if (adjustedPovertyPercentage == 100)
-            {
-                explanationString = "Congratulations! You've just eradicated poverty in the UK. By redistributing 53% of the wealth from the super-rich to the poor you remove " + totalPovertyCount.toLocaleString() + " from poverty and the 20th wealthiest family in the country still has nearly £4 billion."
-                document.getElementById("explanationString").style.color = "green";
-            }   
-            else
-            {
-                explanationString = "You've resdistributed £" + totalReducedValue + " billon (" + value + "%) from the super-rich to the poor. This has moved " + newTotalPovertyCount.toLocaleString() + " people (" + adjustedPovertyPercentage + ")% out of poverty."
-                document.getElementById("explanationString").style.color = "orange";
-            }
-
-            document.getElementById("explanationString").innerHTML = explanationString;
-        }          
+        }
+             
     };
 
     return (

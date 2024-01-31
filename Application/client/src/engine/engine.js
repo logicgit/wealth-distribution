@@ -119,8 +119,10 @@
         return roundToDecimalPlaces(percentChange, 1);
     }
 
-    export function howManyCanWeAfford(cost, pageInterest){
-        return Math.floor(pageInterest / cost);
+    // Work out how many items of "cost" that "amount" can afford
+    // Round the returned value
+    export function howManyCanWeAfford(cost, amount){
+        return Math.floor(amount / cost);
     }
 
     // Helper function to round to x decimal places
