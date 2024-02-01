@@ -27,8 +27,8 @@ const RealtimeContext = () => {
     const [wealthColumns, setWealthColumns] = useState([])
     const [wealthRecords, setWealthRecords] = useState([])
     const [comparisonData, setComparisonData] = useState([])
+    const [interestRates, setInterestRateData] = useState([])
 
-    
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
     
     useEffect(()=>{
@@ -47,7 +47,12 @@ const RealtimeContext = () => {
 
                 res = await axios.get("http://localhost:8800/comparison_data")
                 jsonObject = JSON.parse(res.data[0].JSON);
-                setComparisonData(jsonObject.ComparisonItems)      
+                setComparisonData(jsonObject.ComparisonItems)    
+                
+                // Load Interest rate data
+                res = await axios.get("http://localhost:8800/interest_rates")
+                jsonObject = JSON.parse(res.data[0].JSON);            
+                setInterestRateData(jsonObject.InterestRates)                
             }
             catch(err){
                 console.log(err)
@@ -75,7 +80,7 @@ const RealtimeContext = () => {
     
                 if (wealthRecord == null || comparisonRecord == null) continue;
                 
-                var introString = "The richest person in the UK is currently " + wealthRecord.Name + " with a total wealth of £" + wealthRecord.Wealth + "BN. We know that's a lot of money but actually how much is it and how much does it grow by? Let's assume a conservative growth rate of 5% ..."
+                var introString = "The richest person in the UK is currently " + wealthRecord.Name + " with a total wealth of £" + wealthRecord.Wealth + "BN. We know that's a lot of money but actually how much is it and how much does it grow by? Let's use the current Bank of England interest rate which is " + interestRates.UK + "%."  
                 var introStringElement = document.getElementById("introString")
                 totalWealth = wealthRecord.Wealth * 1000000000;
                 

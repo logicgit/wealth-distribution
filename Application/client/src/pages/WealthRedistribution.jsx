@@ -18,7 +18,6 @@ const WealthRedistribution = () => {
     const [wealthColumns, setWealthColumns] = useState([])
     const [wealthRecords, setWealthRecords] = useState([])
     const [povertyRecords, setPovertyRecords] = useState([])
-    const [interestRates, setInterestRateData] = useState([])
 
     useEffect(()=>{
         const getData = async () =>{
@@ -33,10 +32,6 @@ const WealthRedistribution = () => {
                 res = await axios.get("http://localhost:8800/poverty_data")
                 jsonObject = JSON.parse(res.data[0].JSON);
                 setPovertyRecords(jsonObject.Poverty);
-
-                // Load Interest rate data
-                res = await axios.get("http://localhost:8800/interest_rates")
-                setInterestRateData(res.data[0].JSON)
             }
             catch(err){
                 console.log(err)
