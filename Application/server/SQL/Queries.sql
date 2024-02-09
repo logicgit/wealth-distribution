@@ -2,13 +2,13 @@ INSERT INTO json_data
 VALUES ('Book data', '[{"id":1,"title":"Test title"}]' );
 
 INSERT INTO json_data
-VALUES ('Interest Rates', '{"Interest Rates" : {"UK" : "5.25"}}' );
+VALUES ('Interest Rates', '{"InterestRates" : {"UK" : "5.25"}}' );
 
 INSERT INTO json_data
 VALUES ('Poverty Data', '{"Poverty" : {"Total" : "15400000", "Children" : "4200000",  "Adults" : "8100000",  "Pensioners" : "2100000"}}' );
 
 INSERT INTO json_data
-VALUES ('Comparison Data', '{"Comparison Items" : [{"Name" : "iPhone","Cost" : "1000","Image" : "../images/phone.png"},{"Name" : "Ferrari","Cost" : "200000","Image" : "images/ferrari.png"},{"Name" : "Super Yacht","Cost" : "20000000","Image" : "images/boat.png"}]}' );
+VALUES ('Comparison Data', '{"ComparisonItems" : [{"Name" : "iPhone","Cost" : "1000","Image" : "../images/phone.png"},{"Name" : "Ferrari","Cost" : "200000","Image" : "images/ferrari.png"},{"Name" : "Super Yacht","Cost" : "20000000","Image" : "images/boat.png"}]}' );
 
 INSERT INTO json_data
 VALUES ('Wealth Data',

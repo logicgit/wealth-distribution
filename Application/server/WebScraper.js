@@ -46,7 +46,7 @@ function parseInterestRateData(html) {
 function buildInterestRateJSON(interestRate) {
     console.log("Building interest rate JSON")
     try {    
-        var interestRateJson = "{\"Interest Rates\": {\"UK\": \"" + interestRate + "\"}}"
+        var interestRateJson = "{\"InterestRates\": {\"UK\": \"" + interestRate + "\"}}"
         console.log(interestRateJson)
         return interestRateJson
 	} catch (error) {
