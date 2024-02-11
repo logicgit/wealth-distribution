@@ -42,7 +42,7 @@ function parseInterestRateData(html) {
 }
 
 // Use the passed in rate to build the JSON
-// {"Interest Rates": {"UK": "5.25"}}
+// {"InterestRates": {"UK": "5.25"}}
 function buildInterestRateJSON(interestRate) {
     console.log("Building interest rate JSON")
     try {    

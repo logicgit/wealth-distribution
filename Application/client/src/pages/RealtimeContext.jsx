@@ -68,6 +68,7 @@ const RealtimeContext = () => {
         var totalWealth = 0;
         var wealthRecord = null;
         var comparisonRecord = null;
+        var interestRate = interestRates.UK;
 
         try {
             while (true) {
@@ -78,7 +79,7 @@ const RealtimeContext = () => {
                 wealthRecord = wealthRecords[1];
                 comparisonRecord = comparisonData[1];
     
-                if (wealthRecord == null || comparisonRecord == null) continue;
+                if (wealthRecord == null || comparisonRecord == null || interestRate == null) continue;
                 
                 var introString = "The richest person in the UK is currently " + wealthRecord.Name + " with a total wealth of £" + wealthRecord.Wealth + "BN. We know that's a lot of money but actually how much is it and how much does it grow by? Let's use the current Bank of England interest rate which is " + interestRates.UK + "%."  
                 var introStringElement = document.getElementById("introString")
@@ -87,25 +88,27 @@ const RealtimeContext = () => {
                 if (introStringElement) introStringElement.innerHTML = introString;
                 break;
             }
-            var tmp = 0;
+
+            // Divide the interest rate by 100
+            interestRate /= 100;
     
             // Call into our calc engine to get the growth values and set them in our realTimeTable
             // Call into our calc engine and update the comparisonTable
             var headingPopulated = false;
             while (true) {          
                 var realTimeTable = document.getElementsByClassName("realTimeTable")[0];
-                var comparisonTable = document.getElementsByClassName("comparisonTable")[0];
-                
+                var comparisonTable = document.getElementsByClassName("comparisonTable")[0];            
+
                 // Since page loaded
-                var pageInterest = calcInterestSincePageLoaded(totalWealth);
+                var pageInterest = calcInterestSincePageLoaded(totalWealth, interestRate);
                 if (realTimeTable.rows != null) realTimeTable.rows[1].cells[0].innerHTML = pageInterest.toLocaleString();      
     
                 // Since start of day
-                var dayInterest = calcInterestSinceStartOfDay(totalWealth);
+                var dayInterest = calcInterestSinceStartOfDay(totalWealth, interestRate);
                 if (realTimeTable.rows != null) realTimeTable.rows[1].cells[1].innerHTML = dayInterest.toLocaleString();         
     
                 // Since start of year
-                var yearInterest = calcInterestSinceStartOfYear(totalWealth);
+                var yearInterest = calcInterestSinceStartOfYear(totalWealth, interestRate);
                 if (realTimeTable.rows != null) realTimeTable.rows[1].cells[2].innerHTML = yearInterest.toLocaleString();         
     
                 // Comparison items
